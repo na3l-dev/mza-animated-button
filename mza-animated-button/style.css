@@ -1,0 +1,91 @@
+:root{
+  --bg:#07090d;
+  --accent-1:#4a8dff;
+  --accent-2:#2f6fe0;
+  --ok-1:#3fdca9;
+  --ok-2:#10b981;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+body{
+  margin:0;min-height:100vh;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:-0.045em;
+}
+
+.demo{width:100%;max-width:340px;padding:24px;display:grid;gap:16px}
+
+/* ---------- Bouton ---------- */
+.btnwrap{display:flex;justify-content:center}
+
+.btn{
+  position:relative;overflow:hidden;
+  width:100%;height:48px;border:0;border-radius:12px;cursor:pointer;color:#fff;
+  font:inherit;font-weight:600;font-size:15.5px;letter-spacing:-0.03em;
+  background:linear-gradient(180deg,var(--accent-1),var(--accent-2));
+  box-shadow:0 8px 24px -8px rgba(59,130,246,.7),0 1px 0 rgba(255,255,255,.2) inset;
+  transition:
+    width .5s cubic-bezier(.65,0,.35,1),
+    border-radius .5s cubic-bezier(.65,0,.35,1),
+    box-shadow .4s, transform .1s, filter .15s;
+}
+
+/* Calque vert qui apparaît en fondu au succès */
+.btn::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,var(--ok-1),var(--ok-2));
+  opacity:0;transition:opacity .4s;
+}
+
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.98)}
+
+/* Éléments superposés au centre du bouton */
+.btn > *{
+  position:absolute;left:50%;top:50%;
+  transition:opacity .25s, transform .35s;
+}
+.lbl{transform:translate(-50%,-50%);white-space:nowrap}
+
+/* Anneau de chargement */
+.ring{
+  width:24px;height:24px;margin:-12px 0 0 -12px;
+  opacity:0;animation:spin .8s linear infinite;
+}
+
+/* Coche (se dessine au succès) */
+.chk{width:26px;height:26px;margin:-13px 0 0 -13px;opacity:0}
+.chk path{
+  stroke-dasharray:30;stroke-dashoffset:30;
+  transition:stroke-dashoffset .4s .2s ease-out;
+}
+
+/* ---------- États ---------- */
+/* Chargement ou succès : le bouton devient un cercle */
+.btn.busy,
+.btn.ok{width:48px;border-radius:24px;pointer-events:none}
+
+.btn.busy .lbl,
+.btn.ok .lbl{opacity:0;transform:translate(-50%,-50%) scale(.8)}
+
+.btn.busy .ring{opacity:1}
+
+.btn.ok::before{opacity:1}
+.btn.ok{box-shadow:0 8px 24px -8px rgba(52,211,153,.75),0 1px 0 rgba(255,255,255,.25) inset}
+.btn.ok .chk{opacity:1}
+.btn.ok .chk path{stroke-dashoffset:0}
+
+/* Erreur : petit tremblement */
+.btn.shake{animation:shake .4s}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{
+  20%,60%{transform:translateX(-7px)}
+  40%,80%{transform:translateX(7px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
